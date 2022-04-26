@@ -11,15 +11,11 @@ def job():
     site = BeautifulSoup(htmlBruto1, 'html.parser')
     tagPreco = site.find('div', attrs={'class':'priceValue smallerPrice'})
     #print(tagPreco)
-
     preco = tagPreco.find('span')
-    lastPrice = " "
 
-    while lastPrice != preco.text:
-        lastPrice = preco.text
-        with open ("precos.txt") as arquivo:
-            arquivo.write(lastPrice)
-        print(lastPrice)
+    print()
+    print(preco.text)
+    print()
 
 schedule.every(10).seconds.do(job)
 
