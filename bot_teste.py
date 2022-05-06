@@ -7,23 +7,22 @@ from bs4 import BeautifulSoup
 
 def job(): 
 
-    urlMongo = "https://data.mongodb-api.com/app/data-pkmib/endpoint/data/beta/action/findOne"
-
-    url = requests.get('https://coinmarketcap.com/pt-br/currencies/bitcoin/')
-    htmlBruto = url.content
+    url1 = requests.get('https://coinmarketcap.com/pt-br/currencies/bitcoin/')
+    htmlBruto = url1.content
     site = BeautifulSoup(htmlBruto, 'html.parser')
     tagPreco = site.find('div', attrs={'class':'priceValue smallerPrice'})
     preco = tagPreco.find('span')
-    time = datetime.now()
-    salvar = [preco.text, str(time)]
-
+    time = str(datetime.now())
+    
+    url = "https://data.mongodb-api.com/app/data-pkmib/endpoint/data/beta/action/insertOne"
     payload = json.dumps({
-    "collection": "routes",
-    "database": "sample_training",
-    "dataSource": "Cluster0",
-    "projection": {
-        "_id": 1
-    }
+        "collection": "testea",
+        "database": "teste",
+        "dataSource": "Cluster0",
+        "document": {
+            "preço": preco.text,
+            "horario": time
+        }
     })
     headers = {
         'Content-Type': 'application/json',
@@ -34,7 +33,7 @@ def job():
     print(response.text)
 
 schedule.every(2).minutes.do(job)
-    
+
 while True:
     schedule.run_pending()
-    #time.sleep(0)
+    time.sleep(0)

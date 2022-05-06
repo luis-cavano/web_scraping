@@ -1,12 +1,13 @@
 import requests
 import json
-url = "https://data.mongodb-api.com/app/data-pkmib/endpoint/data/beta/action/findOne"
+url = "https://data.mongodb-api.com/app/data-pkmib/endpoint/data/beta/action/insertOne"
 payload = json.dumps({
-    "collection": "routes",
-    "database": "sample_training",
+    "collection": "testea",
+    "database": "teste",
     "dataSource": "Cluster0",
-    "projection": {
-        "_id": 1
+    "document": {
+        "nome":"luis",
+        "idade":"17"
     }
 })
 headers = {
