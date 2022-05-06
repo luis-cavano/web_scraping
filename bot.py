@@ -1,33 +1,39 @@
 import requests
 import schedule
-import csv
+import json
+import time
 from datetime import datetime
 from bs4 import BeautifulSoup
 
-
 def job(): 
+
     url1 = requests.get('https://coinmarketcap.com/pt-br/currencies/bitcoin/')
-    #print(url1.status_code)
-    htmlBruto1 = url1.content
-    site = BeautifulSoup(htmlBruto1, 'html.parser')
+    htmlBruto = url1.content
+    site = BeautifulSoup(htmlBruto, 'html.parser')
     tagPreco = site.find('div', attrs={'class':'priceValue smallerPrice'})
-    #print(tagPreco)
     preco = tagPreco.find('span')
-
-    time = datetime.now()
-
-    dict_1 = {
-    "preco" : preco.text,
-    "data" : time,
-    }
-       
-    print()
-    print(dict_1)
-    print()
-
-#schedule.every(2).minutes.do(job)
-schedule.every(5).seconds.do(job)
+    time = str(datetime.now())
     
+    url = "https://data.mongodb-api.com/app/data-pkmib/endpoint/data/beta/action/insertOne"
+    payload = json.dumps({
+        "collection": "testea",
+        "database": "teste",
+        "dataSource": "Cluster0",
+        "document": {
+            "preço": preco.text,
+            "horario": time
+        }
+    })
+    headers = {
+        'Content-Type': 'application/json',
+        'Access-Control-Request-Headers': '*',
+        'api-key': 'bWdELScAUp4oSoDmVLyoOPIKosx0VqCpJpQdlgzuWq9HW2R8MqRXNDcyxLtpB59A'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print(response.text)
+
+schedule.every(2).minutes.do(job)
+
 while True:
     schedule.run_pending()
-    #time.sleep(0)
+    time.sleep(0)
